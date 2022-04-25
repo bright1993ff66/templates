@@ -1,0 +1,174 @@
+% !TeX spellcheck = en_US
+% LaTeX rebuttal letter example. 
+% 
+% Copyright 2019 Friedemann Zenke, fzenke.net
+%
+% Based on examples by Dirk Eddelbuettel, Fran and others from 
+% https://tex.stackexchange.com/questions/2317/latex-style-or-macro-for-detailed-response-to-referee-report
+% 
+% Licensed under cc by-sa 3.0 with attribution required.
+% See https://creativecommons.org/licenses/by-sa/3.0/
+% and https://stackoverflow.blog/2009/06/25/attribution-required/
+
+% Reference link: https://fzenke.net/index.php/goodies/latex-rebuttal/
+
+% xcolor package reference: https://tex.stackexchange.com/questions/141569/highlight-textcolor-and-boldface-simultaneously
+% document settings
+\documentclass[a4paper, 12pt]{article}
+
+% basic packages
+\usepackage[a4paper,left=37mm,right=30mm,top=35mm,bottom=30mm]{geometry}
+\usepackage{bookmark}  % generate the bookmarks for pdf file
+\usepackage{lipsum}
+
+% add the cross reference links
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks = false,
+	linkbordercolor={0 0 0},
+}
+
+% for citation management
+\usepackage[style=authoryear, sorting=nty, backend=bibtex]{biblatex}
+\addbibresource{response.bib}
+\usepackage{url}
+
+
+% other packages
+\usepackage{xcolor}  % highlight some text
+
+% import Eq and Section references from the main manuscript where needed
+% \usepackage{xr}
+% \externaldocument{manuscript}
+
+% package needed for optional arguments
+\usepackage{xifthen}
+% define counters for examiners and their points
+\newcounter{examiner}
+\setcounter{examiner}{0}
+\newcounter{point}[examiner]
+\setcounter{point}{0}
+
+% This refines the format of how the examiner/point reference will appear.
+\renewcommand{\thepoint}{P\,\theexaminer.\arabic{point}} 
+
+% command declarations for examiner points and our responses
+\newcommand{\examinersection}{\stepcounter{examiner} \bigskip \hrule
+                  \section{Examiner \theexaminer}}
+
+\newenvironment{point}
+   {\refstepcounter{point} \bigskip \noindent {\textbf{Examiner~Point~\thepoint} } ---\ }
+   {\par }
+
+\newcommand{\shortpoint}[1]{\refstepcounter{point}  \bigskip \noindent 
+	{\textbf{Examiner~Point~\thepoint} } ---~#1\par }
+
+\newenvironment{reply}
+   {\medskip \noindent \begin{sf}\textbf{Reply}:\  }
+   {\medskip \end{sf}}
+
+\newcommand{\shortreply}[2][]{\medskip \noindent \begin{sf}\textbf{Reply}:\  #2
+	\ifthenelse{\equal{#1}{}}{}{ \hfill \footnotesize (#1)}%
+	\medskip \end{sf}}
+
+\begin{document}
+	
+\title{\large \textbf{Response Letter for Article: \\ Name of the Article}}
+\author{Your Name \\ \href{mailto:your email}{your email}}
+
+\maketitle
+
+% Start the cover letter of the response letter
+
+\noindent Dear Editor and Reviewers,
+
+\bigskip
+
+% General intro text goes here
+\noindent I am very grateful for the critical assessment and insightful comments of my article "\textbf{The name of the article}" from reviewers. I have revised the article and addressed each of the questions raised by reviewers in this response letter. The major points are summarized below:
+
+% Summarize the major edits
+\begin{enumerate}
+	\item Point 1
+	\item Point 2
+	\item Point 3
+\end{enumerate}
+
+\noindent Please find below the responses to the specific comments raised by each reviewer.
+
+\bigskip
+
+\noindent Yours sincerely,
+
+\noindent Your Name
+
+\noindent \href{mailto:your email}{your email}
+
+\newpage
+
+% Let's start point-by-point with examiner 1
+\examinersection
+
+\subsection{General Perception}
+\lipsum[1]
+
+\subsection{Comments from Reviewer One}
+
+% Point one description 
+\begin{point}
+The first reviewer's first question...
+\end{point}
+
+% Our reply
+\begin{reply}
+\lipsum[2] \parencite{Xu2018Sensing}.  
+\end{reply}
+
+\printbibliography[keyword={examiner1},title={Reference}]
+
+\pagebreak
+
+% Begin a new examiner section
+\examinersection
+
+\subsection{General Perception}
+
+\lipsum[3]
+
+\subsection{Comments from Reviewer Two}
+
+\begin{point}
+The second reviewer's first question...
+\end{point}
+
+\begin{reply}
+\lipsum[4] \parencite{Chainey2008utility}
+\end{reply}
+
+\printbibliography[keyword={examiner2}, title={Reference}]
+
+\pagebreak
+
+% Begin a new examiner section
+\examinersection
+
+\subsection{General Perception}
+
+\lipsum[5]
+
+\subsection{Comments from Reviewer Three}
+
+\begin{point}
+The third reviewer's first question...
+\end{point}
+
+\begin{reply}
+\lipsum[6] \parencite{Ali2021, Gu2016From}
+\lipsum[8] \parencite{Cao2014Web-based}
+\end{reply}
+
+\printbibliography[keyword={examiner3}, title={Reference}]
+
+\end{document}
+
+

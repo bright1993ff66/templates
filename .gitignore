@@ -1,0 +1,12 @@
+# files
+*.aux
+*.bst
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.pdf
+*.spl
+*.xml
+*.synctex.gz

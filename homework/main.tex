@@ -1,0 +1,322 @@
+% !TeX spellcheck = en_US
+\documentclass[12pt,letterpaper]{article}
+\usepackage{fullpage}
+\usepackage[top=2cm, bottom=4.5cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage{amsmath,amsthm,amsfonts,amssymb,amscd}
+\usepackage{lastpage}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{mathrsfs}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+ 
+\lstset{style=mystyle}
+
+\newcommand{\norm}[1]{\lVert#1\rVert_2}
+
+\hypersetup{%
+  colorlinks=true,
+  linkcolor=blue,
+  linkbordercolor={0 0 1}
+}
+ 
+\renewcommand\lstlistingname{Algorithm}
+\renewcommand\lstlistlistingname{Algorithms}
+\def\lstlistingautorefname{Alg.}
+
+\lstdefinestyle{Python}{
+    language        = Python,
+    frame           = lines, 
+    basicstyle      = \footnotesize,
+    keywordstyle    = \color{blue},
+    stringstyle     = \color{green},
+    commentstyle    = \color{red}\ttfamily
+}
+
+\setlength{\parindent}{0.0in}
+\setlength{\parskip}{0.05in}
+
+% Edit these as appropriate
+\newcommand\course{SDSC 8005}
+\newcommand\hwnumber{1}                  % <-- homework number
+\newcommand\NetIDa{CHANG Haoliang}           % <-- NetID of person #1
+\newcommand\NetIDb{55197643}           % <-- NetID of person #2 (Comment this line out for problem sets)
+
+\pagestyle{fancyplain}
+\headheight 35pt
+\lhead{\NetIDa}
+\lhead{\NetIDa\\\NetIDb}                 % <-- Comment this line out for problem sets (make sure you are person #1)
+\chead{\textbf{\Large Homework \hwnumber}}
+\rhead{\course \\ \today}
+\lfoot{}
+\cfoot{}
+\rfoot{\small\thepage}
+\headsep 1.5em
+
+\begin{document}
+
+\section*{Question 1}
+
+Answer to the Question 1 goes here.
+
+\subsection*{(a)}
+
+Since one can produce and sell a fraction of laptop, we could formulate this problem as the following:
+
+\begin{equation}
+\begin{aligned}
+& \underset{x_1, x_2}{\text{minimize}}
+& & -1200x_1 - 1300x_2 \\
+& \text{s.t.} & &  2x_1+x_2 \leq 500 \\
+& & & 2x_1+3x_2 \leq 800 \\
+& & &  0 \leq x_1 \leq 220 \\
+& & &  0 \leq x_2 \leq 180 \\
+\end{aligned}
+\label{optimization1_1}
+\end{equation}
+
+where $x_1, x_2$ represent the number of full-size laptops and compact laptops produced respectively. 
+
+\subsection*{(b)}
+
+Using the Python package \textbf{cvxpy}, we write the following codes to find the optimal solution:
+
+\begin{lstlisting}[language=Python, caption=Question 1.b]
+import cvxpy as cp
+
+x_1 = cp.Variable()
+x_2 = cp.Variable()
+
+constraint = []
+constraint.append(2*x_1 + x_2 <= 500)
+constraint.append(2*x_1 + 3*x_2 <= 800)
+constraint.append(x_1<=220)
+constraint.append(x_2<=180)
+constraint.append(x_1>=0)
+constraint.append(x_2>=0)
+
+prob = cp.Problem(cp.Maximize(1200*x_1 + 1300*x_2), constraint)
+prob.solve()
+
+print('The optimal value is: {}'.format(prob.value))
+print('The optimal value for x_1 is: {}'.format(x_1.value))
+print('The optimal value for x_2 is: {}'.format(x_2.value))
+\end{lstlisting}
+
+Based on the above codes, the optimal solution of the optimization problem in \ref{optimization1_1} is: $x_1=175, x_2=150$. The objective value is 405000. 
+
+\subsection*{(c)}
+
+By adding 10 hours in general assembly process, the optimization problem given in \ref{optimization1_1} could be reformatted as follows:
+
+\begin{equation}
+\begin{aligned}
+& \underset{x_1, x_2, r}{\text{minimize}}
+& & -1200x_1 - 1300x_2\\
+& \text{s.t.} & &  2x_1+x_2 \leq 510 \\
+& & & 2x_1+3x_2 \leq 800 \\
+& & &  0 \leq x_1 \leq 220 \\
+& & &  0 \leq x_2 \leq 180 \\
+\end{aligned}
+\label{optimization1_3}
+\end{equation}
+
+Then using the following codes:
+
+\begin{lstlisting}[language=Python, caption=Question 1.c]
+import cvxpy as cp
+
+# Construct two variables
+x_1 = cp.Variable()
+x_2 = cp.Variable()
+
+# Construct constraints
+constraint = []
+constraint.append(2*x_1 + x_2 <= 510) # add 10 hours in here
+constraint.append(2*x_1 + 3*x_2 <= 800)
+constraint.append(x_1<=220)
+constraint.append(x_2<=180)
+constraint.append(x_1>=0)
+constraint.append(x_2>=0)
+
+# Solve the problem
+prob = cp.Problem(cp.Maximize(1200*x_1 + 1300*x_2), constraint)
+prob.solve()
+# Get the result
+print('The optimal value is: {}'.format(prob.value))
+print('The optimal value for x_1 is: {}'.format(x_1.value))
+print('The optimal value for x_2 is: {}'.format(x_2.value))
+\end{lstlisting}
+
+we could get the optimal solution is: $x_1 = 182.5, x_2 = 145$. Based on this setting, Junhui could give Clint at most $\$$2500, in other words, $\$$250 per hour.
+
+\section*{Question 2}
+
+Answer to the Question 2 goes here.
+
+\subsection*{(a)}
+
+The problem could be formulated as the following:
+
+\begin{equation}
+\begin{aligned}
+& \underset{x_1, x_2, x_3, x_4, x_5, x_6}{\text{minimize}}
+& & -7000x_1 - 5000x_2 - 6000x_3 - 7000x_4 - 5000x_5 - 6000x_6 \\
+& \text{s.t.} & &  3x_1+2x_2+3x_3 \leq 30 \\
+& & & 4x_4+3x_5+2x_6 \leq 20 \\
+& & &  x_1 + x_4 \leq 10 \\
+& & &  x_2 + x_5 \leq 8 \\
+& & &  x_3 + x_6 \leq 7 \\
+& & &  x_1, x_2, x_3, x_4, x_5, x_6 \in Z_{\geq 0} \\
+\end{aligned}
+\label{optimization2_1}
+\end{equation}
+
+Where $x_1, x_3$ denote the number of watch A produced by factory 1 and factory 2, $x_2, x_4$ represent the number of watch B produced by factory 1 and factory 2 and $x_3, x_6$ denote the number of watch C produced by factory 1 and factory 2.
+
+Using Python \textbf{cvxopt} package, we could write the following codes:
+
+\begin{lstlisting}[language=Python, caption=Question 2.a]
+import numpy as np
+from cvxopt import matrix, solvers
+from cvxopt.glpk import ilp
+
+# The coefficients of inequalities
+A = matrix([ [1.0, 0.0, 0.0, 3.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+            [1.0, 0.0, 0.0, 2.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0], 
+           [0.0, 1.0, 0.0, 3.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0], 
+           [0.0, 1.0, 0.0, 0.0, 4.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0],
+           [0.0, 0.0, 1.0, 0.0, 3.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0], 
+           [0.0, 0.0, 1.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0] ])
+
+# The RHS values of inequalities
+b = matrix([ 10.0, 8.0, 7.0, 30.0, 20.0, 0.0, 0.0, 0.0,0.0, 0.0, 0.0 ])
+# The coefficients of the objective function
+c = matrix([ -7000.0, -7000.0, -5000.0, -5000.0, -6000.0, -6000.0 ])
+
+I=set(range(0, 6)) # set of indices of integer variables
+B=set() # set of indices of binary variables
+
+# Get optimial solution
+(status,x)=ilp(c,A,b, matrix(1., (0,6)),matrix(1., (0,1)),I,B)
+# print(status) # check the solution status
+print(x)
+\end{lstlisting}
+
+Finally, the optimal solution of the optimization problem \ref{optimization2_1} is $x_1 = 0, x_2 = 1, x_3 = 3, x_4 = 1, x_5 = 0, x_6 = 7$.
+
+\subsection*{(b)}
+
+Here, we introduce a big number $M$ and formulate the problem as the following:
+
+\begin{equation}
+\begin{aligned}
+& \underset{x_1, x_2, x_3, x_4, x_5, x_6}{\text{minimize}}
+& & -7000x_1 - 5000x_2 - 6000x_3 - 7000x_4 - 5000x_5 - 6000x_6 \\
+& \text{s.t.} & &  3x_1+2x_2+3x_3 \leq 30 \\
+& & & 4x_4+3x_5+2x_6 \leq 20 \\
+& & &  x_1 + x_4 \leq 10 \\
+& & &  x_2 + x_5 \leq 8 \\
+& & &  x_3 + x_6 \leq 7 \\
+& & &  y_1 + y_2 + y_3 \leq 2 \\
+& & &  y_4 + y_5 + y_6 \leq 2 \\
+& & &  8 - x_1 -x_2 \leq M(1-y_1) \\
+& & &  x_1 \leq My_1 \\
+& & &  x_2 \leq My_2 \\
+& & &  x_3 \leq My_3 \\
+& & &  x_4 \leq My_4 \\
+& & &  x_5 \leq My_5 \\
+& & &  x_6 \leq My_6 \\
+& & &  x_1, x_2, x_3, x_4, x_5, x_6 \in Z_{\geq 0} \\
+& & &  y_1, y_2, y_3, y_4, y_5, y_6 \in \{0, 1\} \\
+\end{aligned}
+\label{optimization2_2}
+\end{equation}
+
+Here, $y_1, y_4$ denote whether factory 1 and factory 2 produce watch A or not. $y_2, y_5$ represent whether factory 1 and factory 2 produce watch B or not. Finally, $y_3, y_6$  mean factory 1 and factory 2 produce watch C or not.
+
+Based on the above settings, we use the following codes to find the optimal solution:
+
+\begin{lstlisting}[language=Python, caption=Question 2.b]
+import cvxpy as cp
+
+# Create variables.
+x_1 = cp.Variable(integer=True)
+x_2 = cp.Variable(integer=True)
+x_3 = cp.Variable(integer=True)
+x_4 = cp.Variable(integer=True)
+x_5 = cp.Variable(integer=True)
+x_6 = cp.Variable(integer=True)
+
+y_1 = cp.Variable(boolean=True)
+y_2 = cp.Variable(boolean=True)
+y_3 = cp.Variable(boolean=True)
+y_4 = cp.Variable(boolean=True)
+y_5 = cp.Variable(boolean=True)
+y_6 = cp.Variable(boolean=True)
+
+# Set a big number M
+M = 100000000
+
+# Create constraints.
+constraints = [3*x_1 + 2*x_2 + 3*x_3 <= 30,
+4*x_4 + 3*x_5 + 2*x_6 <= 20, 
+x_1 + x_4 <= 10, 
+x_2 + x_5 <= 8, 
+x_3 + x_6 <= 7,
+y_1 + y_2 + y_3 <= 2, 
+y_4 + y_5 + y_6 <= 2, 
+8 - x_1 - x_2 <= M*(1 - y_1), 
+x_1 <= M*y_1,
+x_1 >= 0,
+x_2 <= M*y_2,
+x_2 >= 0,
+x_3 <= M*y_3,
+x_3 >= 0,
+x_4 <= M*y_4,
+x_4 >= 0,
+x_5 <= M*y_5,
+x_5 >= 0,
+x_6 <= M*y_6, 
+x_6 >= 0]
+
+# Form objective.
+obj = cp.Minimize(-7000*x_1 - 5000*x_2 - 6000*x_3 -7000*x_4 - 5000*x_5 - 6000*x_6 )
+
+# Form and solve problem.
+prob = cp.Problem(obj, constraints)
+prob.solve()
+print("The values of Xs are: x_1: {}, x_2: {}, x_3: {}, x_4: {}, x_5: {}, x_6: {}".format(x_1.value, x_2.value, x_3.value, x_4.value, x_5.value, x_6.value))
+\end{lstlisting}
+
+The optimal solution is $x_1 = 6, x_2 = 6, x_3 = 0, x_4 = 0, x_5 = 2, x_6 = 7$. The objective value is 124000.
+
+\end{document}
