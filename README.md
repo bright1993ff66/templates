@@ -10,4 +10,5 @@ For writing:
 
 For coding:
 
-- vim configuration file (```.vimrc```)
+- ```vim``` configuration file (```.vimrc```)
+- ```zsh``` configuration file (```.zshrc```)
