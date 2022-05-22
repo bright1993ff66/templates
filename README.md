@@ -6,6 +6,7 @@ For writing:
 
 - article
 - response letter
+- research proposal
 - homework
 
 For coding:
